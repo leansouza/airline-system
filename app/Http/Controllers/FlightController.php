@@ -10,8 +10,27 @@ use Illuminate\Validation\ValidationException;
 use Exception;
 use Carbon\Carbon;
 
+
+/**
+ * @OA\Tag(
+ *     name="Flights",
+ *     description="API Endpoints de Flights"
+ * )
+ */
 class FlightController extends Controller
 {
+
+    /**
+     * @OA\Get(
+     *     path="/api/flights",
+     *     tags={"Flights"},
+     *     summary="Listar todos os voos",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de voos"
+     *     )
+     * )
+     */
     public function index()
     {
         try {
@@ -22,6 +41,35 @@ class FlightController extends Controller
         }
     }
 
+
+     /**
+     * @OA\Post(
+     *     path="/api/flights",
+     *     tags={"Flights"},
+     *     summary="Criar um novo voo",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="origin_airport_id", type="integer", example=1),
+     *             @OA\Property(property="destination_airport_id", type="integer", example=2),
+     *             @OA\Property(property="flight_number", type="string", example="FL123"),
+     *             @OA\Property(property="departure_time", type="string", format="date-time", example="2024-07-01T10:00:00Z")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Voo criado com sucesso"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro na validação"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro interno do servidor"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         try {
@@ -41,6 +89,28 @@ class FlightController extends Controller
         }
     }
 
+
+    /**
+ * @OA\Get(
+ *     path="/api/flights/{id}",
+ *     tags={"Flights"},
+ *     summary="Mostrar um voo específico",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Detalhes do voo"
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Voo não encontrado"
+ *     )
+ * )
+ */
     public function show($id)
     {
         try {
@@ -54,6 +124,40 @@ class FlightController extends Controller
         }
     }
 
+    /**
+ * @OA\Put(
+ *     path="/api/flights/{id}",
+ *     tags={"Flights"},
+ *     summary="Atualizar um voo",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="origin_airport_id", type="integer", example=1),
+ *             @OA\Property(property="destination_airport_id", type="integer", example=2),
+ *             @OA\Property(property="flight_number", type="string", example="FL123"),
+ *             @OA\Property(property="departure_time", type="string", format="date-time", example="2024-07-01T10:00:00Z")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Voo atualizado com sucesso"
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Erro na validação"
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Erro interno do servidor"
+ *     )
+ * )
+ */
     public function update(Request $request, $id)
     {
         try {
@@ -78,6 +182,27 @@ class FlightController extends Controller
         }
     }
 
+    /**
+ * @OA\Delete(
+ *     path="/api/flights/{id}",
+ *     tags={"Flights"},
+ *     summary="Deletar um voo",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=204,
+ *         description="Voo deletado com sucesso"
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Voo não encontrado"
+ *     )
+ * )
+ */
     public function destroy($id)
     {
         try {
@@ -92,6 +217,32 @@ class FlightController extends Controller
             return response()->json(['message' => 'Internal server error'], 500);
         }
     }
+
+    /**
+ * @OA\Get(
+ *     path="/api/flights/{id}/passengers",
+ *     tags={"Flights"},
+ *     summary="Listar passageiros de um voo",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Lista de passageiros"
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Voo não encontrado"
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Erro interno do servidor"
+ *     )
+ * )
+ */
 
     public function passengers($id)
     {
@@ -117,6 +268,48 @@ class FlightController extends Controller
             return response()->json(['message' => 'Internal server error'], 500);
         }
     }
+
+
+/**
+ * @OA\Schema(
+ *     schema="Flight",
+ *     type="object",
+ *     required={"id", "origin_airport_id", "destination_airport_id", "departure_time", "arrival_time", "price"},
+ *     @OA\Property(
+ *         property="id",
+ *         type="integer",
+ *         description="Flight ID"
+ *     ),
+ *     @OA\Property(
+ *         property="origin_airport_id",
+ *         type="integer",
+ *         description="ID of the origin airport"
+ *     ),
+ *     @OA\Property(
+ *         property="destination_airport_id",
+ *         type="integer",
+ *         description="ID of the destination airport"
+ *     ),
+ *     @OA\Property(
+ *         property="departure_time",
+ *         type="string",
+ *         format="date-time",
+ *         description="Departure time of the flight"
+ *     ),
+ *     @OA\Property(
+ *         property="arrival_time",
+ *         type="string",
+ *         format="date-time",
+ *         description="Arrival time of the flight"
+ *     ),
+ *     @OA\Property(
+ *         property="price",
+ *         type="number",
+ *         format="float",
+ *         description="Price of the flight"
+ *     )
+ * )
+ */
 
     public function search(Request $request)
     {

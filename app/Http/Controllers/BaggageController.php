@@ -10,14 +10,49 @@ use App\Http\Resources\BaggageResource;
 use App\Http\Resources\BaggageCollection;
 use Carbon\Carbon;
 
+/**
+ * @OA\Tag(
+ *     name="Baggages",
+ *     description="API Endpoints de Baggages"
+ * )
+ */
 class BaggageController extends Controller
 {
+
+     /**
+     * @OA\Get(
+     *     path="/api/baggages",
+     *     tags={"Baggages"},
+     *     summary="Listar todas as bagagens",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de bagagens"
+     *     )
+     * )
+     */
     public function index()
     {
         $baggages = Baggage::all();
         return new BaggageCollection($baggages);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/baggages",
+     *     tags={"Baggages"},
+     *     summary="Criar uma nova bagagem",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="ticket_id", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Bagagem criada com sucesso"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -40,6 +75,27 @@ class BaggageController extends Controller
         return new BaggageResource($baggage);
     }
 
+     /**
+     * @OA\Get(
+     *     path="/api/baggages/{id}",
+     *     tags={"Baggages"},
+     *     summary="Mostrar uma bagagem específica",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Detalhes da bagagem"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Bagagem não encontrada"
+     *     )
+     * )
+     */
     public function show($id)
     {
         $baggage = Baggage::find($id);
@@ -48,6 +104,34 @@ class BaggageController extends Controller
         }
         return new BaggageResource($baggage);
     }
+
+        /**
+     * @OA\Put(
+     *     path="/api/baggages/{id}",
+     *     tags={"Baggages"},
+     *     summary="Atualizar uma bagagem",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="ticket_id", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Bagagem atualizada com sucesso"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Bagagem não encontrada"
+     *     )
+     * )
+     */
 
     public function update(Request $request, $id)
     {
@@ -64,6 +148,28 @@ class BaggageController extends Controller
         return new BaggageResource($baggage);
     }
 
+        /**
+     * @OA\Delete(
+     *     path="/api/baggages/{id}",
+     *     tags={"Baggages"},
+     *     summary="Deletar uma bagagem",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Bagagem deletada com sucesso"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Bagagem não encontrada"
+     *     )
+     * )
+     */
+
     public function destroy($id)
     {
         $baggage = Baggage::find($id);
@@ -79,6 +185,33 @@ class BaggageController extends Controller
         $baggage->delete();
         return response()->json(null, 204);
     }
+
+        /**
+     * @OA\Post(
+     *     path="/api/baggages/label",
+     *     tags={"Baggages"},
+     *     summary="Emitir etiqueta da bagagem",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="ticket_number", type="string", example="ticket-number-123"),
+     *             @OA\Property(property="baggage_number", type="string", example="baggage-number-456")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Etiqueta da bagagem emitida com sucesso"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Bagagem ou ticket não encontrado"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Erro na emissão da etiqueta da bagagem"
+     *     )
+     * )
+     */
 
     public function issueBaggageLabel(Request $request)
     {

@@ -15,11 +15,38 @@ use Carbon\Carbon;
 /**
  * @OA\Info(
  *     title="API de Sistema de Passagens",
- *     version="1.0.0"
+ *     version="1.0.0",
+ *     description="Esta API permite a gestão de um sistema de passagens aéreas. 
+ *     Para acessar os endpoints protegidos, siga os passos abaixo:
+ *     
+ *     1. Registre um novo usuário utilizando o endpoint `POST /register`.
+ *     2. Faça login utilizando o endpoint `POST /login` com as credenciais do usuário registrado.
+ *     3. O login retornará um token Bearer que deve ser usado para autenticação nos endpoints protegidos.
+ *     4. Adicione o token Bearer ao cabeçalho `Authorization` em cada solicitação para os endpoints protegidos.
+ *     
+ *     As rotas protegidas incluem todas as operações de criação, atualização e exclusão de aeroportos, voos, classes de voo, bagagens, visitantes e tickets.
+ *   
+ *     Rotas disponíveis:
+ *     - `POST /register`: Registrar um novo usuário
+ *     - `POST /login`: Fazer login com um usuário registrado
+ *     - `POST /logout`: Fazer logout de um usuário autenticado
+ *     - `POST /tickets`: Criar um novo ticket (protegida)
+ *     - `GET /tickets/cpf/{cpf}`: Obter tickets por CPF (protegida)
+ *     - `GET /tickets/{id}/voucher`: Emitir voucher de um ticket (protegida)
+ *     - `POST /visitors`: Criar um novo visitante (protegida)
+ *     - `GET /flights`: Listar todos os voos
+ *     - `GET /flights/search`: Buscar voos
+ *     - `GET /flights/{id}`: Obter detalhes de um voo
+ *     - `POST /baggages/label`: Emitir etiqueta de bagagem
+ *     "
  * )
  * @OA\Tag(
  *     name="Tickets",
  *     description="API Endpoints de Tickets"
+ * )
+ * @OA\Server(
+ *     url="https://blooming-wildwood-57841-3bf5ab1421c7.herokuapp.com",
+ *     description="Servidor API de Produção"
  * )
  */
 class TicketController extends Controller

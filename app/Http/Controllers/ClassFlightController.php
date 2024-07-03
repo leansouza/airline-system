@@ -9,8 +9,27 @@ use App\Http\Resources\ClassFlightCollection;
 use Illuminate\Validation\ValidationException;
 use Exception;
 
+
+/**
+ * @OA\Tag(
+ *     name="ClassFlights",
+ *     description="API Endpoints de ClassFlights"
+ * )
+ */
 class ClassFlightController extends Controller
 {
+
+    /**
+     * @OA\Get(
+     *     path="/api/classflights",
+     *     tags={"ClassFlights"},
+     *     summary="Listar todas as classes de voos",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de classes de voos"
+     *     )
+     * )
+     */
     public function index()
     {
         try {
@@ -21,6 +40,31 @@ class ClassFlightController extends Controller
         }
     }
 
+
+     /**
+     * @OA\Post(
+     *     path="/api/classflights",
+     *     tags={"ClassFlights"},
+     *     summary="Criar uma nova classe de voo",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="flight_id", type="integer", example=1),
+     *             @OA\Property(property="class_type", type="string", example="Econômica"),
+     *             @OA\Property(property="seat_quantity", type="integer", example=100),
+     *             @OA\Property(property="price", type="number", format="float", example=500.00)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Classe de voo criada com sucesso"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Erro na criação da classe de voo"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         try {
@@ -48,6 +92,28 @@ class ClassFlightController extends Controller
         }
     }
 
+
+     /**
+     * @OA\Get(
+     *     path="/api/classflights/{id}",
+     *     tags={"ClassFlights"},
+     *     summary="Mostrar uma classe de voo específica",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Detalhes da classe de voo"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Classe de voo não encontrada"
+     *     )
+     * )
+     */
     public function show($id)
     {
         try {
@@ -61,6 +127,37 @@ class ClassFlightController extends Controller
         }
     }
 
+
+    /**
+     * @OA\Put(
+     *     path="/api/classflights/{id}",
+     *     tags={"ClassFlights"},
+     *     summary="Atualizar uma classe de voo",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="flight_id", type="integer", example=1),
+     *             @OA\Property(property="class_type", type="string", example="Econômica"),
+     *             @OA\Property(property="seat_quantity", type="integer", example=100),
+     *             @OA\Property(property="price", type="number", format="float", example=500.00)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Classe de voo atualizada com sucesso"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Classe de voo não encontrada"
+     *     )
+     * )
+     */
     public function update(Request $request, $id)
     {
         try {
@@ -96,6 +193,27 @@ class ClassFlightController extends Controller
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/api/classflights/{id}",
+     *     tags={"ClassFlights"},
+     *     summary="Deletar uma classe de voo",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Classe de voo deletada com sucesso"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Classe de voo não encontrada"
+     *     )
+     * )
+     */
     public function destroy($id)
     {
         try {

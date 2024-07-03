@@ -9,8 +9,25 @@ use App\Http\Resources\AirportCollection;
 use Illuminate\Validation\ValidationException;
 use Exception;
 
+/**
+ * @OA\Tag(
+ *     name="Airports",
+ *     description="API Endpoints de Airports"
+ * )
+ */
 class AirportController extends Controller
 {
+     /**
+     * @OA\Get(
+     *     path="/api/airports",
+     *     tags={"Airports"},
+     *     summary="Listar todos os aeroportos",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de aeroportos"
+     *     )
+     * )
+     */
     public function index()
     {
         try {
@@ -21,6 +38,25 @@ class AirportController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/airports",
+     *     tags={"Airports"},
+     *     summary="Criar um novo aeroporto",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string", example="Aeroporto Internacional"),
+     *             @OA\Property(property="iata_code", type="string", example="XYZ"),
+     *             @OA\Property(property="city_id", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Aeroporto criado com sucesso"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         try {
@@ -39,6 +75,27 @@ class AirportController extends Controller
         }
     }
 
+     /**
+     * @OA\Get(
+     *     path="/api/airports/{id}",
+     *     tags={"Airports"},
+     *     summary="Mostrar um aeroporto específico",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Detalhes do aeroporto"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Aeroporto não encontrado"
+     *     )
+     * )
+     */
     public function show($id)
     {
         try {
@@ -52,6 +109,35 @@ class AirportController extends Controller
         }
     }
 
+    /**
+     * @OA\Put(
+     *     path="/api/airports/{id}",
+     *     tags={"Airports"},
+     *     summary="Atualizar um aeroporto",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string", example="Aeroporto Internacional Atualizado"),
+     *       @OA\Property(property="iata_code", type="string", example="XYZ"),
+    *             @OA\Property(property="city_id", type="integer", example=1)
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Aeroporto atualizado com sucesso"
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Aeroporto não encontrado"
+    *     )
+    * )
+    */
     public function update(Request $request, $id)
     {
         try {
@@ -75,6 +161,27 @@ class AirportController extends Controller
         }
     }
 
+    /**
+ * @OA\Delete(
+ *     path="/api/airports/{id}",
+ *     tags={"Airports"},
+ *     summary="Deletar um aeroporto",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=204,
+ *         description="Aeroporto deletado com sucesso"
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Aeroporto não encontrado"
+ *     )
+ * )
+ */
     public function destroy($id)
     {
         try {

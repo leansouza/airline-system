@@ -2,9 +2,965 @@
     "openapi": "3.0.0",
     "info": {
         "title": "API de Sistema de Passagens",
+        "description": "Esta API permite a gestão de um sistema de passagens aéreas. \n *     Para acessar os endpoints protegidos, siga os passos abaixo:\n *     \n *     1. Registre um novo usuário utilizando o endpoint `POST /register`.\n *     2. Faça login utilizando o endpoint `POST /login` com as credenciais do usuário registrado.\n *     3. O login retornará um token Bearer que deve ser usado para autenticação nos endpoints protegidos.\n *     4. Adicione o token Bearer ao cabeçalho `Authorization` em cada solicitação para os endpoints protegidos.\n *     \n *     As rotas protegidas incluem todas as operações de criação, atualização e exclusão de aeroportos, voos, classes de voo, bagagens, visitantes e tickets.\n *   \n *     Rotas disponíveis:\n *     - `POST /register`: Registrar um novo usuário\n *     - `POST /login`: Fazer login com um usuário registrado\n *     - `POST /logout`: Fazer logout de um usuário autenticado\n *     - `POST /tickets`: Criar um novo ticket (protegida)\n *     - `GET /tickets/cpf/{cpf}`: Obter tickets por CPF (protegida)\n *     - `GET /tickets/{id}/voucher`: Emitir voucher de um ticket (protegida)\n *     - `POST /visitors`: Criar um novo visitante (protegida)\n *     - `GET /flights`: Listar todos os voos\n *     - `GET /flights/search`: Buscar voos\n *     - `GET /flights/{id}`: Obter detalhes de um voo\n *     - `POST /baggages/label`: Emitir etiqueta de bagagem\n *     ",
         "version": "1.0.0"
     },
+    "servers": [
+        {
+            "url": "https://blooming-wildwood-57841-3bf5ab1421c7.herokuapp.com",
+            "description": "Servidor API de Produção"
+        }
+    ],
     "paths": {
+        "/api/airports": {
+            "get": {
+                "tags": [
+                    "Airports"
+                ],
+                "summary": "Listar todos os aeroportos",
+                "operationId": "36bec0a2b27fca4a4e23dd92070adecf",
+                "responses": {
+                    "200": {
+                        "description": "Lista de aeroportos"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Airports"
+                ],
+                "summary": "Criar um novo aeroporto",
+                "operationId": "a757ecaef11f8db40b69a1a94f4783e4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Aeroporto Internacional"
+                                    },
+                                    "iata_code": {
+                                        "type": "string",
+                                        "example": "XYZ"
+                                    },
+                                    "city_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Aeroporto criado com sucesso"
+                    }
+                }
+            }
+        },
+        "/api/airports/{id}": {
+            "get": {
+                "tags": [
+                    "Airports"
+                ],
+                "summary": "Mostrar um aeroporto específico",
+                "operationId": "ee894d0dd68c0005509f12a6c0a8b3a2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do aeroporto"
+                    },
+                    "404": {
+                        "description": "Aeroporto não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Airports"
+                ],
+                "summary": "Atualizar um aeroporto",
+                "operationId": "db0c9f7c4b04e1135a16217efb5eb77f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Aeroporto Internacional Atualizado"
+                                    },
+                                    "iata_code": {
+                                        "type": "string",
+                                        "example": "XYZ"
+                                    },
+                                    "city_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Aeroporto atualizado com sucesso"
+                    },
+                    "404": {
+                        "description": "Aeroporto não encontrado"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Airports"
+                ],
+                "summary": "Deletar um aeroporto",
+                "operationId": "d7149372bb36a29d0b9cb8fee6818b54",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Aeroporto deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Aeroporto não encontrado"
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Register a new user",
+                "operationId": "8a56853624e025573120a09a4c75d468",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation",
+                                    "role"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "enum": [
+                                            "manager",
+                                            "visitor"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful registration",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "John Doe"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "john.doe@example.com"
+                                        },
+                                        "role": {
+                                            "type": "string",
+                                            "example": "manager"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Internal server error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Login user",
+                "operationId": "a3b306d14572d1f4bd6c064b3233e7b8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "type": "string",
+                                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "Bearer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Internal server error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Logout user",
+                "operationId": "fe8f3429cd6979b3b4517e186505f9f9",
+                "responses": {
+                    "200": {
+                        "description": "Successfully logged out",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logged out successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Internal server error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/baggages": {
+            "get": {
+                "tags": [
+                    "Baggages"
+                ],
+                "summary": "Listar todas as bagagens",
+                "operationId": "54fbdb9903cd8a7d7f7e4ff353fe4cde",
+                "responses": {
+                    "200": {
+                        "description": "Lista de bagagens"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Baggages"
+                ],
+                "summary": "Criar uma nova bagagem",
+                "operationId": "ec575514c7f8493d70d492ddf935e3e2",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "ticket_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Bagagem criada com sucesso"
+                    }
+                }
+            }
+        },
+        "/api/baggages/{id}": {
+            "get": {
+                "tags": [
+                    "Baggages"
+                ],
+                "summary": "Mostrar uma bagagem específica",
+                "operationId": "924b662dc789127de92f5c8b387856c6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes da bagagem"
+                    },
+                    "404": {
+                        "description": "Bagagem não encontrada"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Baggages"
+                ],
+                "summary": "Atualizar uma bagagem",
+                "operationId": "ad4e699dc512c4c75c824742a7401f60",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "ticket_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Bagagem atualizada com sucesso"
+                    },
+                    "404": {
+                        "description": "Bagagem não encontrada"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Baggages"
+                ],
+                "summary": "Deletar uma bagagem",
+                "operationId": "5ce0b7f3268bddf047d29f7017295e05",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Bagagem deletada com sucesso"
+                    },
+                    "404": {
+                        "description": "Bagagem não encontrada"
+                    }
+                }
+            }
+        },
+        "/api/baggages/label": {
+            "post": {
+                "tags": [
+                    "Baggages"
+                ],
+                "summary": "Emitir etiqueta da bagagem",
+                "operationId": "97b93a776feca779ae780ca0bb681973",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "ticket_number": {
+                                        "type": "string",
+                                        "example": "ticket-number-123"
+                                    },
+                                    "baggage_number": {
+                                        "type": "string",
+                                        "example": "baggage-number-456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Etiqueta da bagagem emitida com sucesso"
+                    },
+                    "404": {
+                        "description": "Bagagem ou ticket não encontrado"
+                    },
+                    "400": {
+                        "description": "Erro na emissão da etiqueta da bagagem"
+                    }
+                }
+            }
+        },
+        "/api/classflights": {
+            "get": {
+                "tags": [
+                    "ClassFlights"
+                ],
+                "summary": "Listar todas as classes de voos",
+                "operationId": "27243e4dccba2f743f424f1acb740aea",
+                "responses": {
+                    "200": {
+                        "description": "Lista de classes de voos"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "ClassFlights"
+                ],
+                "summary": "Criar uma nova classe de voo",
+                "operationId": "c391be2a1164bfb3e4b51656acc242d4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "flight_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "class_type": {
+                                        "type": "string",
+                                        "example": "Econômica"
+                                    },
+                                    "seat_quantity": {
+                                        "type": "integer",
+                                        "example": 100
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 500
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Classe de voo criada com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro na criação da classe de voo"
+                    }
+                }
+            }
+        },
+        "/api/classflights/{id}": {
+            "get": {
+                "tags": [
+                    "ClassFlights"
+                ],
+                "summary": "Mostrar uma classe de voo específica",
+                "operationId": "56b70db01cd633a65be171d3f2f46930",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes da classe de voo"
+                    },
+                    "404": {
+                        "description": "Classe de voo não encontrada"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "ClassFlights"
+                ],
+                "summary": "Atualizar uma classe de voo",
+                "operationId": "426f8960bdeaaf635796def59c10eb2a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "flight_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "class_type": {
+                                        "type": "string",
+                                        "example": "Econômica"
+                                    },
+                                    "seat_quantity": {
+                                        "type": "integer",
+                                        "example": 100
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 500
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Classe de voo atualizada com sucesso"
+                    },
+                    "404": {
+                        "description": "Classe de voo não encontrada"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "ClassFlights"
+                ],
+                "summary": "Deletar uma classe de voo",
+                "operationId": "17a640b6ba6ab31b714d1f986bcc2c75",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Classe de voo deletada com sucesso"
+                    },
+                    "404": {
+                        "description": "Classe de voo não encontrada"
+                    }
+                }
+            }
+        },
+        "/api/flights": {
+            "get": {
+                "tags": [
+                    "Flights"
+                ],
+                "summary": "Listar todos os voos",
+                "operationId": "4baffc280d4c3e239575b8c57e979397",
+                "responses": {
+                    "200": {
+                        "description": "Lista de voos"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Flights"
+                ],
+                "summary": "Criar um novo voo",
+                "operationId": "429a30d2ba9b4c386fd85eefd684225e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "origin_airport_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "destination_airport_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "flight_number": {
+                                        "type": "string",
+                                        "example": "FL123"
+                                    },
+                                    "departure_time": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-07-01T10:00:00Z"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Voo criado com sucesso"
+                    },
+                    "422": {
+                        "description": "Erro na validação"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            }
+        },
+        "/api/flights/{id}": {
+            "get": {
+                "tags": [
+                    "Flights"
+                ],
+                "summary": "Mostrar um voo específico",
+                "operationId": "6ab7311543197daa8b1ff4be0f88c90e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do voo"
+                    },
+                    "404": {
+                        "description": "Voo não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Flights"
+                ],
+                "summary": "Atualizar um voo",
+                "operationId": "29d9b985eff7a7d40f56bd4a377854c9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "origin_airport_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "destination_airport_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "flight_number": {
+                                        "type": "string",
+                                        "example": "FL123"
+                                    },
+                                    "departure_time": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-07-01T10:00:00Z"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Voo atualizado com sucesso"
+                    },
+                    "422": {
+                        "description": "Erro na validação"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Flights"
+                ],
+                "summary": "Deletar um voo",
+                "operationId": "fe823c1af305d4b2566476b298c44e5a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Voo deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Voo não encontrado"
+                    }
+                }
+            }
+        },
+        "/api/flights/{id}/passengers": {
+            "get": {
+                "tags": [
+                    "Flights"
+                ],
+                "summary": "Listar passageiros de um voo",
+                "operationId": "1f5b32a39d536208f122088133c9e559",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de passageiros"
+                    },
+                    "404": {
+                        "description": "Voo não encontrado"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            }
+        },
         "/api/tickets": {
             "get": {
                 "tags": [
@@ -309,7 +1265,79 @@
             }
         }
     },
+    "components": {
+        "schemas": {
+            "Flight": {
+                "required": [
+                    "id",
+                    "origin_airport_id",
+                    "destination_airport_id",
+                    "departure_time",
+                    "arrival_time",
+                    "price"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Flight ID",
+                        "type": "integer"
+                    },
+                    "origin_airport_id": {
+                        "description": "ID of the origin airport",
+                        "type": "integer"
+                    },
+                    "destination_airport_id": {
+                        "description": "ID of the destination airport",
+                        "type": "integer"
+                    },
+                    "departure_time": {
+                        "description": "Departure time of the flight",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "arrival_time": {
+                        "description": "Arrival time of the flight",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "price": {
+                        "description": "Price of the flight",
+                        "type": "number",
+                        "format": "float"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
     "tags": [
+        {
+            "name": "Airports",
+            "description": "API Endpoints de Airports"
+        },
+        {
+            "name": "Authentication",
+            "description": "API Endpoints for user authentication"
+        },
+        {
+            "name": "Baggages",
+            "description": "API Endpoints de Baggages"
+        },
+        {
+            "name": "ClassFlights",
+            "description": "API Endpoints de ClassFlights"
+        },
+        {
+            "name": "Flights",
+            "description": "API Endpoints de Flights"
+        },
         {
             "name": "Tickets",
             "description": "API Endpoints de Tickets"
