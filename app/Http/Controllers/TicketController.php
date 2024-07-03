@@ -45,7 +45,7 @@ use Carbon\Carbon;
  *     description="API Endpoints de Tickets"
  * )
  * @OA\Server(
- *     url="https://blooming-wildwood-57841-3bf5ab1421c7.herokuapp.com/",
+ *     url="https://blooming-wildwood-57841-3bf5ab1421c7.herokuapp.com",
  *     description="Servidor API de Produção"
  * )
  */
