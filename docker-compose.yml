@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  mysqlhands:
+    image: mysql:latest
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: localhost
+      MYSQL_DATABASE: hands
+      MYSQL_PASSWORD: localhost
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+
+  apihands:
+    image: apihands
+    restart: always
+    ports:
+      - "8044:8044"
+    depends_on:
+      - mysqlhands
+    volumes:
+      - ./:/var/www/html/
