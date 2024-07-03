@@ -43,7 +43,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('tickets', [TicketController::class, 'store']);
     Route::get('tickets/cpf/{cpf}', [TicketController::class, 'getTicketsByCPF']);
     Route::get('tickets/{id}/voucher', [TicketController::class, 'issueVoucher']);
-    Route::get('baggages/{id}/label', [BaggageController::class, 'issueBaggageLabel']);
     Route::post('visitors', [VisitorController::class, 'store']);
 });
 
@@ -51,3 +50,4 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('flights', [FlightController::class, 'index']);
 Route::get('flights/search', [FlightController::class, 'search']);
 Route::get('flights/{id}', [FlightController::class, 'show']);
+Route::post('baggages/label', [BaggageController::class, 'issueBaggageLabel']);

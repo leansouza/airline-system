@@ -12,14 +12,75 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
+/**
+ * @OA\Info(
+ *     title="API de Sistema de Passagens",
+ *     version="1.0.0"
+ * )
+ * @OA\Tag(
+ *     name="Tickets",
+ *     description="API Endpoints de Tickets"
+ * )
+ */
 class TicketController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/api/tickets",
+     *     tags={"Tickets"},
+     *     summary="Listar todos os tickets",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de tickets"
+     *     )
+     * )
+     */
     public function index()
     {
         $tickets = Ticket::all();
         return new TicketCollection($tickets);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/tickets",
+     *     tags={"Tickets"},
+     *     summary="Criar novos tickets",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="flight_id", type="integer", example=1),
+     *             @OA\Property(property="class_flights_id", type="integer", example=1),
+     *             @OA\Property(
+     *                 property="visitor",
+     *                 type="object",
+     *                 @OA\Property(property="name", type="string", example="John Doe"),
+     *                 @OA\Property(property="cpf", type="string", example="123.456.789-10"),
+     *                 @OA\Property(property="email", type="string", example="johndoe@example.com"),
+     *                 @OA\Property(property="birthdate", type="string", format="date", example="1985-05-15")
+     *             ),
+     *             @OA\Property(
+     *                 property="tickets",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="passenger_name", type="string", example="Jane Doe"),
+     *                     @OA\Property(property="passenger_cpf", type="string", example="987.654.321-00"),
+     *                     @OA\Property(property="passenger_birthdate", type="string", format="date", example="1990-10-10"),
+     *                     @OA\Property(property="has_baggage", type="boolean", example=true)
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Tickets criados com sucesso"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Erro na criação dos tickets"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -30,7 +91,7 @@ class TicketController extends Controller
             'visitor.cpf' => 'required|string|max:14',
             'visitor.email' => 'required|string|email|max:255',
             'visitor.birthdate' => 'required|date',
-            'tickets' => 'required|array',
+            'tickets' => 'required|array|min:1',
             'tickets.*.passenger_name' => 'required|string|max:255',
             'tickets.*.passenger_cpf' => 'required|string|max:14',
             'tickets.*.passenger_birthdate' => 'required|date',
@@ -39,12 +100,16 @@ class TicketController extends Controller
 
         $classFlight = ClassFlight::find($request->class_flights_id);
 
+        if ($classFlight->flight_id != $request->flight_id) {
+            return response()->json(['error' => 'The class_flights_id does not belong to the specified flight_id.'], 400);
+        }
+
         if (Ticket::where('class_flights_id', $request->class_flights_id)->count() + count($request->tickets) > $classFlight->seat_quantity) {
             return response()->json(['error' => 'Not enough seats available in this class.'], 400);
         }
 
         $visitor = Visitor::updateOrCreate(
-            ['cpf' => preg_replace('/[^\d]/', '',$request->visitor['cpf'])],
+            ['cpf' => $request->visitor['cpf']],
             [
                 'name' => $request->visitor['name'],
                 'email' => $request->visitor['email'],
@@ -88,6 +153,27 @@ class TicketController extends Controller
         return new TicketCollection(collect($tickets));
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/tickets/{id}",
+     *     tags={"Tickets"},
+     *     summary="Mostrar um ticket específico",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Detalhes do ticket"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Ticket não encontrado"
+     *     )
+     * )
+     */
     public function show($id)
     {
         $ticket = Ticket::find($id);
@@ -97,6 +183,40 @@ class TicketController extends Controller
         return new TicketResource($ticket);
     }
 
+    /**
+     * @OA\Put(
+     *     path="/api/tickets/{id}",
+     *     tags={"Tickets"},
+     *     summary="Atualizar um ticket",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="flight_id", type="integer", example=1),
+     *             @OA\Property(property="class_flights_id", type="integer", example=1),
+     *             @OA\Property(property="visitor_id", type="integer", example=1),
+     *             @OA\Property(property="passenger_name", type="string", example="Jane Doe"),
+     *             @OA\Property(property="passenger_cpf", type="string", example="987.654.321-00"),
+     *             @OA\Property(property="passenger_birthdate", type="string", format="date", example="1990-10-10"),
+     *             @OA\Property(property="total_price", type="number", format="float", example=220.00),
+     *             @OA\Property(property="has_baggage", type="boolean", example=true)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Ticket atualizado com sucesso"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Ticket não encontrado"
+     *     )
+     * )
+     */
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -119,42 +239,130 @@ class TicketController extends Controller
         return new TicketResource($ticket);
     }
 
-    public function destroy($id)
-    {
-        $ticket = Ticket::find($id);
-        if (!$ticket) {
-            return response()->json(['error' => 'Ticket not found'], 404);
-        }
-
-        $ticket->delete();
-        return response()->json(null, 204);
+  /**
+ * @OA\Delete(
+ *     path="/api/tickets/{id}",
+ *     tags={"Tickets"},
+ *     summary="Deletar um ticket",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=204,
+ *         description="Ticket deletado com sucesso"
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Ticket não encontrado"
+ *     )
+ * )
+ */
+public function destroy($id)
+{
+    $ticket = Ticket::find($id);
+    if (!$ticket) {
+        return response()->json(['error' => 'Ticket not found'], 404);
     }
 
-    public function getTicketsByCPF($cpf)
-    {
-        $cpf = preg_replace('/[^\d]/', '', $cpf);
-        $visitor = Visitor::where('cpf', $cpf)->first();
+    $ticket->delete();
+    return response()->json(null, 204);
+}
 
-        if (!$visitor) {
-            return response()->json(['error' => 'Visitor not found'], 404);
-        }
+/**
+ * @OA\Get(
+ *     path="/api/tickets/cpf/{cpf}",
+ *     tags={"Tickets"},
+ *     summary="Obter tickets por CPF do comprador",
+ *     @OA\Parameter(
+ *         name="cpf",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="string")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Lista de tickets do comprador"
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Comprador não encontrado"
+ *     )
+ * )
+ */
+public function getTicketsByCPF($cpf)
+{
+    $cpf = preg_replace('/[^\d]/', '', $cpf);
+    $visitor = Visitor::where('cpf', $cpf)->first();
 
-        $tickets = Ticket::where('visitor_id', $visitor->id)->where('status', 'active')->get();
-        return new TicketCollection($tickets);
+    if (!$visitor) {
+        return response()->json(['error' => 'Visitor not found'], 404);
     }
 
-    public function cancelTicket($id)
-    {
-        $ticket = Ticket::find($id);
-        
-        if (!$ticket) {
-            return response()->json(['error' => 'Ticket not found'], 404);
-        }
+    $tickets = Ticket::where('visitor_id', $visitor->id)->where('status', 'active')->get();
+    return new TicketCollection($tickets);
+}
 
-        $ticket->update(['status' => 'cancelled']);
-        return new TicketResource($ticket);
-    }
+/**
+ * @OA\Post(
+ *     path="/api/tickets/{id}/cancel",
+ *     tags={"Tickets"},
+ *     summary="Cancelar um ticket",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Ticket cancelado com sucesso"
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Ticket não encontrado"
+ *     )
+ * )
+ */
+public function cancelTicket($id)
+{
+    $ticket = Ticket::find($id);
     
+    if (!$ticket) {
+        return response()->json(['error' => 'Ticket not found'], 404);
+    }
+
+    $ticket->update(['status' => 'cancelled']);
+    return new TicketResource($ticket);
+}
+
+/**
+ * @OA\Get(
+ *     path="/api/tickets/{id}/voucher",
+ *     tags={"Tickets"},
+ *     summary="Emitir voucher do ticket",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Voucher emitido com sucesso"
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Ticket não encontrado"
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Erro na emissão do voucher"
+ *     )
+ * )
+ */
     public function issueVoucher($id)
     {
         $ticket = Ticket::find($id);

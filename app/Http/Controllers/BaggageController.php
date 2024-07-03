@@ -80,26 +80,35 @@ class BaggageController extends Controller
         return response()->json(null, 204);
     }
 
-    public function issueBaggageLabel($id)
+    public function issueBaggageLabel(Request $request)
     {
-        $baggage = Baggage::where('baggage_number', $id)->first();
-        if (!$baggage) {
-            return response()->json(['error' => 'Baggage not found'], 404);
+        $request->validate([
+            'ticket_number' => 'required|string|exists:tickets,ticket_number',
+            'baggage_number' => 'required|string|exists:baggage,baggage_number',
+        ]);
+
+        $ticket = Ticket::where('ticket_number', $request->ticket_number)->first();
+        $baggage = Baggage::where('baggage_number', $request->baggage_number)->first();
+
+        if (!$ticket || !$baggage || $baggage->ticket_id !== $ticket->id) {
+            return response()->json(['error' => 'Invalid ticket or baggage number.'], 404);
         }
 
-        $ticket = $baggage->ticket;
         $departureTime = Carbon::parse($ticket->flight->departure_time);
-
         if ($departureTime->diffInHours(Carbon::now()) < 5) {
             return response()->json(['error' => 'Cannot issue baggage label within 5 hours of departure'], 400);
         }
 
-        $baggageLabel = ['data'=> [
-            'baggage_number' => $baggage->baggage_number,
-            'ticket_number' => $ticket->ticket_number,
-            'passenger_name' => $ticket->passenger_name,
-        ]];
+        if ($ticket->status !== 'active') {
+            return response()->json(['error' => 'Cannot issue baggage label for a non-active ticket'], 400);
+        }
 
-        return response()->json($baggageLabel);
+        $baggageLabel = [
+            'ticket_number' => $ticket->ticket_number,
+            'baggage_number' => $baggage->baggage_number,
+            'passenger_name' => $ticket->passenger_name,
+        ];
+
+        return response()->json(['data'=> $baggageLabel]);
     }
 }

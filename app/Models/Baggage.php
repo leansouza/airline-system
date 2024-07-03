@@ -9,6 +9,7 @@ class Baggage extends Model
 {
     use HasFactory;
 
+
     protected $fillable = [
         'ticket_id',
         'baggage_number',
