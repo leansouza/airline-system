@@ -1,0 +1,318 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API de Sistema de Passagens",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/tickets": {
+            "get": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Listar todos os tickets",
+                "operationId": "0082053c3590628e674a11ec0d1466e6",
+                "responses": {
+                    "200": {
+                        "description": "Lista de tickets"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Criar novos tickets",
+                "operationId": "93882881cca9046d8c6ddbbab7309b4b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "flight_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "class_flights_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "visitor": {
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "example": "John Doe"
+                                            },
+                                            "cpf": {
+                                                "type": "string",
+                                                "example": "123.456.789-10"
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "example": "johndoe@example.com"
+                                            },
+                                            "birthdate": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "1985-05-15"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "tickets": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "passenger_name": {
+                                                    "type": "string",
+                                                    "example": "Jane Doe"
+                                                },
+                                                "passenger_cpf": {
+                                                    "type": "string",
+                                                    "example": "987.654.321-00"
+                                                },
+                                                "passenger_birthdate": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "1990-10-10"
+                                                },
+                                                "has_baggage": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tickets criados com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro na criação dos tickets"
+                    }
+                }
+            }
+        },
+        "/api/tickets/{id}": {
+            "get": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Mostrar um ticket específico",
+                "operationId": "62091a82e5103c19191c4c1ebd30ec6f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do ticket"
+                    },
+                    "404": {
+                        "description": "Ticket não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Atualizar um ticket",
+                "operationId": "1010dcd7a1f352766df66431f1df4745",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "flight_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "class_flights_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "visitor_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "passenger_name": {
+                                        "type": "string",
+                                        "example": "Jane Doe"
+                                    },
+                                    "passenger_cpf": {
+                                        "type": "string",
+                                        "example": "987.654.321-00"
+                                    },
+                                    "passenger_birthdate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "1990-10-10"
+                                    },
+                                    "total_price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 220
+                                    },
+                                    "has_baggage": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ticket atualizado com sucesso"
+                    },
+                    "404": {
+                        "description": "Ticket não encontrado"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Deletar um ticket",
+                "operationId": "c37b65ae6ff3ffa8c9e0c14ea4d6a9f7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Ticket deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Ticket não encontrado"
+                    }
+                }
+            }
+        },
+        "/api/tickets/cpf/{cpf}": {
+            "get": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Obter tickets por CPF do comprador",
+                "operationId": "132d88c70589b0f74ed8fb3dd1fb65bd",
+                "parameters": [
+                    {
+                        "name": "cpf",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de tickets do comprador"
+                    },
+                    "404": {
+                        "description": "Comprador não encontrado"
+                    }
+                }
+            }
+        },
+        "/api/tickets/{id}/cancel": {
+            "post": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Cancelar um ticket",
+                "operationId": "7c052accd15c597b77dd0d8b4b9966e5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ticket cancelado com sucesso"
+                    },
+                    "404": {
+                        "description": "Ticket não encontrado"
+                    }
+                }
+            }
+        },
+        "/api/tickets/{id}/voucher": {
+            "get": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Emitir voucher do ticket",
+                "operationId": "bcd25375acce0ed6d89bfa433260d90c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Voucher emitido com sucesso"
+                    },
+                    "404": {
+                        "description": "Ticket não encontrado"
+                    },
+                    "400": {
+                        "description": "Erro na emissão do voucher"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Tickets",
+            "description": "API Endpoints de Tickets"
+        }
+    ]
+}
