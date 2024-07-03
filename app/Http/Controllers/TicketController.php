@@ -45,7 +45,7 @@ use Carbon\Carbon;
  *     description="API Endpoints de Tickets"
  * )
  * @OA\Server(
- *     url="https://blooming-wildwood-57841-3bf5ab1421c7.herokuapp.com",
+ *     url="http://localhost:8044",
  *     description="Servidor API de Produção"
  * )
  */
@@ -55,6 +55,7 @@ class TicketController extends Controller
      * @OA\Get(
      *     path="/api/tickets",
      *     tags={"Tickets"},
+     *  security={{"bearerAuth":{}}},
      *     summary="Listar todos os tickets",
      *     @OA\Response(
      *         response=200,
@@ -72,6 +73,7 @@ class TicketController extends Controller
      * @OA\Post(
      *     path="/api/tickets",
      *     tags={"Tickets"},
+     * security={{"bearerAuth":{}}},
      *     summary="Criar novos tickets",
      *     @OA\RequestBody(
      *         required=true,
@@ -184,6 +186,7 @@ class TicketController extends Controller
      * @OA\Get(
      *     path="/api/tickets/{id}",
      *     tags={"Tickets"},
+     * security={{"bearerAuth":{}}},
      *     summary="Mostrar um ticket específico",
      *     @OA\Parameter(
      *         name="id",
@@ -214,6 +217,7 @@ class TicketController extends Controller
      * @OA\Put(
      *     path="/api/tickets/{id}",
      *     tags={"Tickets"},
+     * security={{"bearerAuth":{}}},
      *     summary="Atualizar um ticket",
      *     @OA\Parameter(
      *         name="id",
@@ -270,6 +274,7 @@ class TicketController extends Controller
  * @OA\Delete(
  *     path="/api/tickets/{id}",
  *     tags={"Tickets"},
+ * security={{"bearerAuth":{}}},
  *     summary="Deletar um ticket",
  *     @OA\Parameter(
  *         name="id",
@@ -302,6 +307,7 @@ public function destroy($id)
  * @OA\Get(
  *     path="/api/tickets/cpf/{cpf}",
  *     tags={"Tickets"},
+ * security={{"bearerAuth":{}}},
  *     summary="Obter tickets por CPF do comprador",
  *     @OA\Parameter(
  *         name="cpf",
@@ -336,6 +342,7 @@ public function getTicketsByCPF($cpf)
  * @OA\Post(
  *     path="/api/tickets/{id}/cancel",
  *     tags={"Tickets"},
+ * security={{"bearerAuth":{}}},
  *     summary="Cancelar um ticket",
  *     @OA\Parameter(
  *         name="id",
@@ -369,6 +376,7 @@ public function cancelTicket($id)
  * @OA\Get(
  *     path="/api/tickets/{id}/voucher",
  *     tags={"Tickets"},
+ * security={{"bearerAuth":{}}},
  *     summary="Emitir voucher do ticket",
  *     @OA\Parameter(
  *         name="id",

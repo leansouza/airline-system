@@ -14,14 +14,24 @@ use Exception;
  *     name="Airports",
  *     description="API Endpoints de Airports"
  * )
+ * @OA\SecurityScheme(
+ *     type="http",
+ *     description="Use a Bearer token para autenticação",
+ *     name="Authorization",
+ *     in="header",
+ *     scheme="bearer",
+ *     bearerFormat="JWT",
+ *     securityScheme="bearerAuth",
+ * )
  */
 class AirportController extends Controller
 {
-     /**
+    /**
      * @OA\Get(
      *     path="/api/airports",
      *     tags={"Airports"},
      *     summary="Listar todos os aeroportos",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Lista de aeroportos"
@@ -43,6 +53,7 @@ class AirportController extends Controller
      *     path="/api/airports",
      *     tags={"Airports"},
      *     summary="Criar um novo aeroporto",
+     *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -75,11 +86,12 @@ class AirportController extends Controller
         }
     }
 
-     /**
+    /**
      * @OA\Get(
      *     path="/api/airports/{id}",
      *     tags={"Airports"},
      *     summary="Mostrar um aeroporto específico",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -114,6 +126,7 @@ class AirportController extends Controller
      *     path="/api/airports/{id}",
      *     tags={"Airports"},
      *     summary="Atualizar um aeroporto",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -124,20 +137,20 @@ class AirportController extends Controller
      *         required=true,
      *         @OA\JsonContent(
      *             @OA\Property(property="name", type="string", example="Aeroporto Internacional Atualizado"),
-     *       @OA\Property(property="iata_code", type="string", example="XYZ"),
-    *             @OA\Property(property="city_id", type="integer", example=1)
-    *         )
-    *     ),
-    *     @OA\Response(
-    *         response=200,
-    *         description="Aeroporto atualizado com sucesso"
-    *     ),
-    *     @OA\Response(
-    *         response=404,
-    *         description="Aeroporto não encontrado"
-    *     )
-    * )
-    */
+     *             @OA\Property(property="iata_code", type="string", example="XYZ"),
+     *             @OA\Property(property="city_id", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Aeroporto atualizado com sucesso"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Aeroporto não encontrado"
+     *     )
+     * )
+     */
     public function update(Request $request, $id)
     {
         try {
@@ -162,26 +175,27 @@ class AirportController extends Controller
     }
 
     /**
- * @OA\Delete(
- *     path="/api/airports/{id}",
- *     tags={"Airports"},
- *     summary="Deletar um aeroporto",
- *     @OA\Parameter(
- *         name="id",
- *         in="path",
- *         required=true,
- *         @OA\Schema(type="integer")
- *     ),
- *     @OA\Response(
- *         response=204,
- *         description="Aeroporto deletado com sucesso"
- *     ),
- *     @OA\Response(
- *         response=404,
- *         description="Aeroporto não encontrado"
- *     )
- * )
- */
+     * @OA\Delete(
+     *     path="/api/airports/{id}",
+     *     tags={"Airports"},
+     *     summary="Deletar um aeroporto",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Aeroporto deletado com sucesso"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Aeroporto não encontrado"
+     *     )
+     * )
+     */
     public function destroy($id)
     {
         try {

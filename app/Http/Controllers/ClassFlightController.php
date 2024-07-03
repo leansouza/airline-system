@@ -23,6 +23,7 @@ class ClassFlightController extends Controller
      * @OA\Get(
      *     path="/api/classflights",
      *     tags={"ClassFlights"},
+     * security={{"bearerAuth":{}}},
      *     summary="Listar todas as classes de voos",
      *     @OA\Response(
      *         response=200,
@@ -45,6 +46,7 @@ class ClassFlightController extends Controller
      * @OA\Post(
      *     path="/api/classflights",
      *     tags={"ClassFlights"},
+     * security={{"bearerAuth":{}}},
      *     summary="Criar uma nova classe de voo",
      *     @OA\RequestBody(
      *         required=true,
@@ -97,6 +99,7 @@ class ClassFlightController extends Controller
      * @OA\Get(
      *     path="/api/classflights/{id}",
      *     tags={"ClassFlights"},
+     * security={{"bearerAuth":{}}},
      *     summary="Mostrar uma classe de voo específica",
      *     @OA\Parameter(
      *         name="id",
@@ -132,6 +135,7 @@ class ClassFlightController extends Controller
      * @OA\Put(
      *     path="/api/classflights/{id}",
      *     tags={"ClassFlights"},
+     * security={{"bearerAuth":{}}},
      *     summary="Atualizar uma classe de voo",
      *     @OA\Parameter(
      *         name="id",
@@ -197,6 +201,7 @@ class ClassFlightController extends Controller
      * @OA\Delete(
      *     path="/api/classflights/{id}",
      *     tags={"ClassFlights"},
+     * security={{"bearerAuth":{}}},
      *     summary="Deletar uma classe de voo",
      *     @OA\Parameter(
      *         name="id",

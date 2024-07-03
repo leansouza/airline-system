@@ -23,6 +23,7 @@ class BaggageController extends Controller
      * @OA\Get(
      *     path="/api/baggages",
      *     tags={"Baggages"},
+     * security={{"bearerAuth":{}}},
      *     summary="Listar todas as bagagens",
      *     @OA\Response(
      *         response=200,
@@ -41,6 +42,7 @@ class BaggageController extends Controller
      *     path="/api/baggages",
      *     tags={"Baggages"},
      *     summary="Criar uma nova bagagem",
+     *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -79,6 +81,7 @@ class BaggageController extends Controller
      * @OA\Get(
      *     path="/api/baggages/{id}",
      *     tags={"Baggages"},
+     * security={{"bearerAuth":{}}},
      *     summary="Mostrar uma bagagem específica",
      *     @OA\Parameter(
      *         name="id",
@@ -109,6 +112,7 @@ class BaggageController extends Controller
      * @OA\Put(
      *     path="/api/baggages/{id}",
      *     tags={"Baggages"},
+     * security={{"bearerAuth":{}}},
      *     summary="Atualizar uma bagagem",
      *     @OA\Parameter(
      *         name="id",
@@ -152,6 +156,7 @@ class BaggageController extends Controller
      * @OA\Delete(
      *     path="/api/baggages/{id}",
      *     tags={"Baggages"},
+     * security={{"bearerAuth":{}}},
      *     summary="Deletar uma bagagem",
      *     @OA\Parameter(
      *         name="id",

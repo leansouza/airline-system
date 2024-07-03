@@ -47,6 +47,7 @@ class FlightController extends Controller
      *     path="/api/flights",
      *     tags={"Flights"},
      *     summary="Criar um novo voo",
+     * security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -128,6 +129,7 @@ class FlightController extends Controller
  * @OA\Put(
  *     path="/api/flights/{id}",
  *     tags={"Flights"},
+ * security={{"bearerAuth":{}}},
  *     summary="Atualizar um voo",
  *     @OA\Parameter(
  *         name="id",
@@ -186,6 +188,7 @@ class FlightController extends Controller
  * @OA\Delete(
  *     path="/api/flights/{id}",
  *     tags={"Flights"},
+ * security={{"bearerAuth":{}}},
  *     summary="Deletar um voo",
  *     @OA\Parameter(
  *         name="id",
@@ -222,6 +225,7 @@ class FlightController extends Controller
  * @OA\Get(
  *     path="/api/flights/{id}/passengers",
  *     tags={"Flights"},
+ *      security={{"bearerAuth":{}}},
  *     summary="Listar passageiros de um voo",
  *     @OA\Parameter(
  *         name="id",
@@ -271,42 +275,54 @@ class FlightController extends Controller
 
 
 /**
- * @OA\Schema(
- *     schema="Flight",
- *     type="object",
- *     required={"id", "origin_airport_id", "destination_airport_id", "departure_time", "arrival_time", "price"},
- *     @OA\Property(
- *         property="id",
- *         type="integer",
- *         description="Flight ID"
- *     ),
- *     @OA\Property(
- *         property="origin_airport_id",
- *         type="integer",
+ * @OA\Get(
+ *     path="/api/flights/search",
+ *     operationId="searchFlights",
+ *     tags={"Flights"},
+ *     summary="Search for flights",
+ *     description="Search for flights based on criteria",
+ *     @OA\Parameter(
+ *         name="origin_airport_id",
+ *         in="query",
+ *         required=true,
+ *         @OA\Schema(type="integer"),
  *         description="ID of the origin airport"
  *     ),
- *     @OA\Property(
- *         property="destination_airport_id",
- *         type="integer",
+ *     @OA\Parameter(
+ *         name="destination_airport_id",
+ *         in="query",
+ *         required=true,
+ *         @OA\Schema(type="integer"),
  *         description="ID of the destination airport"
  *     ),
- *     @OA\Property(
- *         property="departure_time",
- *         type="string",
- *         format="date-time",
- *         description="Departure time of the flight"
+ *     @OA\Parameter(
+ *         name="date",
+ *         in="query",
+ *         required=true,
+ *         @OA\Schema(type="string", format="date"),
+ *         description="Date of the flight"
  *     ),
- *     @OA\Property(
- *         property="arrival_time",
- *         type="string",
- *         format="date-time",
- *         description="Arrival time of the flight"
+ *     @OA\Parameter(
+ *         name="max_price",
+ *         in="query",
+ *         required=false,
+ *         @OA\Schema(type="number", format="float"),
+ *         description="Maximum price of the flight"
  *     ),
- *     @OA\Property(
- *         property="price",
- *         type="number",
- *         format="float",
- *         description="Price of the flight"
+ *     @OA\Response(
+ *         response=200,
+ *         description="Successful operation",
+ *        
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Validation error",
+ *    
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Internal server error",
+ *    
  *     )
  * )
  */

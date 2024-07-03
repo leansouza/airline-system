@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "https://blooming-wildwood-57841-3bf5ab1421c7.herokuapp.com",
+            "url": "http://localhost:8044",
             "description": "Servidor API de Produção"
         }
     ],
@@ -23,7 +23,12 @@
                     "200": {
                         "description": "Lista de aeroportos"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -59,7 +64,12 @@
                     "201": {
                         "description": "Aeroporto criado com sucesso"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/airports/{id}": {
@@ -86,7 +96,12 @@
                     "404": {
                         "description": "Aeroporto não encontrado"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "put": {
                 "tags": [
@@ -135,7 +150,12 @@
                     "404": {
                         "description": "Aeroporto não encontrado"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -160,7 +180,12 @@
                     "404": {
                         "description": "Aeroporto não encontrado"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/register": {
@@ -433,7 +458,12 @@
                     "200": {
                         "description": "Lista de bagagens"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -461,7 +491,12 @@
                     "201": {
                         "description": "Bagagem criada com sucesso"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/baggages/{id}": {
@@ -488,7 +523,12 @@
                     "404": {
                         "description": "Bagagem não encontrada"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "put": {
                 "tags": [
@@ -529,7 +569,12 @@
                     "404": {
                         "description": "Bagagem não encontrada"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -554,7 +599,12 @@
                     "404": {
                         "description": "Bagagem não encontrada"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/baggages/label": {
@@ -608,7 +658,12 @@
                     "200": {
                         "description": "Lista de classes de voos"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -652,7 +707,12 @@
                     "400": {
                         "description": "Erro na criação da classe de voo"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/classflights/{id}": {
@@ -679,7 +739,12 @@
                     "404": {
                         "description": "Classe de voo não encontrada"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "put": {
                 "tags": [
@@ -733,7 +798,12 @@
                     "404": {
                         "description": "Classe de voo não encontrada"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -758,7 +828,12 @@
                     "404": {
                         "description": "Classe de voo não encontrada"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/flights": {
@@ -819,7 +894,12 @@
                     "500": {
                         "description": "Erro interno do servidor"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/flights/{id}": {
@@ -903,7 +983,12 @@
                     "500": {
                         "description": "Erro interno do servidor"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -928,7 +1013,12 @@
                     "404": {
                         "description": "Voo não encontrado"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/flights/{id}/passengers": {
@@ -958,6 +1048,72 @@
                     "500": {
                         "description": "Erro interno do servidor"
                     }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/flights/search": {
+            "get": {
+                "tags": [
+                    "Flights"
+                ],
+                "summary": "Search for flights",
+                "description": "Search for flights based on criteria",
+                "operationId": "searchFlights",
+                "parameters": [
+                    {
+                        "name": "origin_airport_id",
+                        "in": "query",
+                        "description": "ID of the origin airport",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "destination_airport_id",
+                        "in": "query",
+                        "description": "ID of the destination airport",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "description": "Date of the flight",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "max_price",
+                        "in": "query",
+                        "description": "Maximum price of the flight",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
                 }
             }
         },
@@ -972,7 +1128,12 @@
                     "200": {
                         "description": "Lista de tickets"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -1054,7 +1215,12 @@
                     "400": {
                         "description": "Erro na criação dos tickets"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/tickets/{id}": {
@@ -1081,7 +1247,12 @@
                     "404": {
                         "description": "Ticket não encontrado"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "put": {
                 "tags": [
@@ -1152,7 +1323,12 @@
                     "404": {
                         "description": "Ticket não encontrado"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -1177,7 +1353,12 @@
                     "404": {
                         "description": "Ticket não encontrado"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/tickets/cpf/{cpf}": {
@@ -1204,7 +1385,12 @@
                     "404": {
                         "description": "Comprador não encontrado"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/tickets/{id}/cancel": {
@@ -1231,7 +1417,12 @@
                     "404": {
                         "description": "Ticket não encontrado"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/tickets/{id}/voucher": {
@@ -1261,59 +1452,24 @@
                     "400": {
                         "description": "Erro na emissão do voucher"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         }
     },
     "components": {
-        "schemas": {
-            "Flight": {
-                "required": [
-                    "id",
-                    "origin_airport_id",
-                    "destination_airport_id",
-                    "departure_time",
-                    "arrival_time",
-                    "price"
-                ],
-                "properties": {
-                    "id": {
-                        "description": "Flight ID",
-                        "type": "integer"
-                    },
-                    "origin_airport_id": {
-                        "description": "ID of the origin airport",
-                        "type": "integer"
-                    },
-                    "destination_airport_id": {
-                        "description": "ID of the destination airport",
-                        "type": "integer"
-                    },
-                    "departure_time": {
-                        "description": "Departure time of the flight",
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "arrival_time": {
-                        "description": "Arrival time of the flight",
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "price": {
-                        "description": "Price of the flight",
-                        "type": "number",
-                        "format": "float"
-                    }
-                },
-                "type": "object"
-            }
-        },
         "securitySchemes": {
-            "sanctum": {
-                "type": "apiKey",
-                "description": "Enter token in format (Bearer <token>)",
+            "bearerAuth": {
+                "type": "http",
+                "description": "Use a Bearer token para autenticação",
                 "name": "Authorization",
-                "in": "header"
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
             }
         }
     },
